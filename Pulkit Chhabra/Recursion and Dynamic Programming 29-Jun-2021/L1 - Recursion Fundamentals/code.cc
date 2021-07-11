@@ -27,51 +27,34 @@ mt19937                 rng(chrono::steady_clock::now().time_since_epoch().count
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
-int dp[100001][20], arr[100001];
+int fast_expo(int a, int n) // n >= 0
+{
+	if (!n)
+		return 1;
+
+	int p = fast_expo(a, n / 2);
+
+	return (n & 1) ? p * p * a : p * p;
+}
+
+int fact(int n) // n >= 0
+{
+	if (!n)
+		return 1;
+
+	return n * fact(n - 1);
+}
+
+int fibo(int n) // n >= 0
+{
+	if (n <= 1)
+		return n;
+
+	return fibo(n - 1) + fibo(n - 2);
+}
 
 int32_t main()
 {
 	FIO;
-	int n; cin >> n;
-
-	for (int i = 1; i <= n; ++i)
-	{
-		cin >> arr[i];
-		dp[i][0] = 0;
-	}
-
-	// Pre-Process
-	for (int i = 1; i <= n; ++i)
-		for (int j = 1; i - (1 << j) >= 0; ++j)
-		{
-			int id = i - (1 << (j - 1));
-
-			// [st,id], [id+1,i], arr[id+1] - arr[id]
-			dp[i][j] = max({dp[id][j - 1], dp[i][j - 1], arr[id + 1] - arr[id]});
-		}
-
-	w(q)
-	{
-		int t, d; cin >> t >> d;
-
-		int r = upper_bound(arr + 1, arr + n + 1, t) - arr - 1;
-		// Last index id s.t. arr[id] <= t
-
-		int l = r, beg = 1, end = r - 1;
-
-		while (beg <= end)
-		{
-			int mid_l = beg + end >> 1;
-
-			int j = log2(r - mid_l + 1);
-
-			if (max(dp[r][j], dp[mid_l + (1 << j) - 1][j]) <= d)
-				l = mid_l, end = mid_l - 1;
-			else
-				beg = mid_l + 1;
-		}
-
-		cout << l << '\n';
-	}
 	return 0;
 }

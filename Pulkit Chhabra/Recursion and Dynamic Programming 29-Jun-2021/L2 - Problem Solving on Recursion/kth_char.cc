@@ -1,3 +1,5 @@
+// https://www.codechef.com/problems/KCHAR/
+
 #include<bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
@@ -27,51 +29,26 @@ mt19937                 rng(chrono::steady_clock::now().time_since_epoch().count
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
-int dp[100001][20], arr[100001];
+char f(int l, int k) // 1 <= k <= l
+{
+	if (k == 1 or k - 1 == l / 2)
+		return 'a';
+
+	return k <= l / 2 ? f(l / 2, k) : 'a' + 'c' -  f(l / 2, l + 1 - k);
+}
 
 int32_t main()
 {
 	FIO;
-	int n; cin >> n;
+	int len = 1;
+	while (len < inf)
+		len = 2 * len + 1;
 
-	for (int i = 1; i <= n; ++i)
+	w(t)
 	{
-		cin >> arr[i];
-		dp[i][0] = 0;
+		int k; cin >> k;
+		cout << f(len, k) << '\n';
 	}
 
-	// Pre-Process
-	for (int i = 1; i <= n; ++i)
-		for (int j = 1; i - (1 << j) >= 0; ++j)
-		{
-			int id = i - (1 << (j - 1));
-
-			// [st,id], [id+1,i], arr[id+1] - arr[id]
-			dp[i][j] = max({dp[id][j - 1], dp[i][j - 1], arr[id + 1] - arr[id]});
-		}
-
-	w(q)
-	{
-		int t, d; cin >> t >> d;
-
-		int r = upper_bound(arr + 1, arr + n + 1, t) - arr - 1;
-		// Last index id s.t. arr[id] <= t
-
-		int l = r, beg = 1, end = r - 1;
-
-		while (beg <= end)
-		{
-			int mid_l = beg + end >> 1;
-
-			int j = log2(r - mid_l + 1);
-
-			if (max(dp[r][j], dp[mid_l + (1 << j) - 1][j]) <= d)
-				l = mid_l, end = mid_l - 1;
-			else
-				beg = mid_l + 1;
-		}
-
-		cout << l << '\n';
-	}
 	return 0;
 }

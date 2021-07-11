@@ -27,51 +27,64 @@ mt19937                 rng(chrono::steady_clock::now().time_since_epoch().count
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
-int dp[100001][20], arr[100001];
+int n;
+
+void generate_permutations_1(vi &cur, vi &mark)
+{
+	if (cur.size() == n)
+	{
+		for (int i : cur)
+			cout << i << ' ';
+		cout << '\n';
+
+		return;
+	}
+
+	for (int i = n; i >= 1; --i)
+	{
+		if (!mark[i])
+		{
+			// Do stuff
+			cur.push_back(i);
+			mark[i] = 1;
+
+			generate_permutations_1(cur, mark);
+
+			// Undo that stuff
+			cur.pop_back();
+			mark[i] = 0;
+		}
+	}
+}
+
+void generate_permutations_2(vi &arr, int i = 0)
+{
+	if (i == arr.size())
+	{
+		for (int cur : arr)
+			cout << cur << ' ';
+		cout << '\n';
+		return;
+	}
+
+	for (int j = i; j < arr.size(); ++j)
+	{
+		swap(arr[i], arr[j]);
+		generate_permutations_2(arr, i + 1);
+		swap(arr[i], arr[j]);
+	}
+}
 
 int32_t main()
 {
 	FIO;
-	int n; cin >> n;
+	/*cin >> n; // [1......n]
+	vector<int> cur, mark(n + 1);
 
-	for (int i = 1; i <= n; ++i)
-	{
-		cin >> arr[i];
-		dp[i][0] = 0;
-	}
+	generate_permutations_1(cur, mark);*/
 
-	// Pre-Process
-	for (int i = 1; i <= n; ++i)
-		for (int j = 1; i - (1 << j) >= 0; ++j)
-		{
-			int id = i - (1 << (j - 1));
+	vi arr = {1, 2, 3};
+	generate_permutations_2(arr);
 
-			// [st,id], [id+1,i], arr[id+1] - arr[id]
-			dp[i][j] = max({dp[id][j - 1], dp[i][j - 1], arr[id + 1] - arr[id]});
-		}
-
-	w(q)
-	{
-		int t, d; cin >> t >> d;
-
-		int r = upper_bound(arr + 1, arr + n + 1, t) - arr - 1;
-		// Last index id s.t. arr[id] <= t
-
-		int l = r, beg = 1, end = r - 1;
-
-		while (beg <= end)
-		{
-			int mid_l = beg + end >> 1;
-
-			int j = log2(r - mid_l + 1);
-
-			if (max(dp[r][j], dp[mid_l + (1 << j) - 1][j]) <= d)
-				l = mid_l, end = mid_l - 1;
-			else
-				beg = mid_l + 1;
-		}
-
-		cout << l << '\n';
-	}
 	return 0;
 }

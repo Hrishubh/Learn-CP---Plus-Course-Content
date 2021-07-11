@@ -1,3 +1,5 @@
+// https://www.hackerearth.com/practice/basic-programming/recursion/recursion-and-backtracking/practice-problems/algorithm/n-queensrecursion-tutorial/
+
 #include<bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
@@ -27,51 +29,68 @@ mt19937                 rng(chrono::steady_clock::now().time_since_epoch().count
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
-int dp[100001][20], arr[100001];
+int n;
+int queen[10][10];
+
+bool under_attack(int r, int c)
+{
+	for (int i = 0; i < r; ++i)
+		if (queen[i][c])
+			return true;
+
+	for (int j = 0; j < c; ++j)
+		if (queen[r][j])
+			return true;
+
+	for (int i = r, j = c; min(i, j) >= 0; i--, j--)
+		if (queen[i][j])
+			return true;
+
+	for (int i = r, j = c; i >= 0 and j < n; i--, j++)
+		if (queen[i][j])
+			return true;
+
+	return false;
+}
+
+bool backtrack(int r = 0)
+{
+	if (r == n)
+		return true;
+
+	for (int c = 0; c < n; ++c)
+		if (!under_attack(r, c))
+		{
+			queen[r][c] = 1;
+			bool done = backtrack(r + 1);
+
+			if (done)
+				return true;
+
+			queen[r][c] = 0;
+		}
+
+	return false;
+}
 
 int32_t main()
 {
 	FIO;
-	int n; cin >> n;
+	cin >> n;
+	bool check = backtrack();
 
-	for (int i = 1; i <= n; ++i)
+	if (check)
 	{
-		cin >> arr[i];
-		dp[i][0] = 0;
-	}
-
-	// Pre-Process
-	for (int i = 1; i <= n; ++i)
-		for (int j = 1; i - (1 << j) >= 0; ++j)
+		for (int i = 0; i < n; ++i)
 		{
-			int id = i - (1 << (j - 1));
-
-			// [st,id], [id+1,i], arr[id+1] - arr[id]
-			dp[i][j] = max({dp[id][j - 1], dp[i][j - 1], arr[id + 1] - arr[id]});
+			for (int j = 0; j  < n; ++j)
+				cout << queen[i][j] << ' ';
+			cout << '\n';
 		}
 
-	w(q)
-	{
-		int t, d; cin >> t >> d;
-
-		int r = upper_bound(arr + 1, arr + n + 1, t) - arr - 1;
-		// Last index id s.t. arr[id] <= t
-
-		int l = r, beg = 1, end = r - 1;
-
-		while (beg <= end)
-		{
-			int mid_l = beg + end >> 1;
-
-			int j = log2(r - mid_l + 1);
-
-			if (max(dp[r][j], dp[mid_l + (1 << j) - 1][j]) <= d)
-				l = mid_l, end = mid_l - 1;
-			else
-				beg = mid_l + 1;
-		}
-
-		cout << l << '\n';
 	}
+
+	else
+		cout << "Not possible\n";
 	return 0;
 }

@@ -1,3 +1,5 @@
+// https://www.hackerearth.com/practice/basic-programming/recursion/recursion-and-backtracking/practice-problems/algorithm/gcd-strings/
+
 #include<bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
@@ -27,51 +29,41 @@ mt19937                 rng(chrono::steady_clock::now().time_since_epoch().count
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
-int dp[100001][20], arr[100001];
+int pwmd(int a, int n = mod - 2)
+{
+	if (!n)
+		return 1;
+	int pt = pwmd(a, n / 2);
+	pt *= pt, pt %= mod;
+	if (n & 1)
+		pt *= a, pt %= mod;
+	return pt;
+}
+
+int sum(long shift, long terms) {
+	// sums 1 + 2^shift + 2^(2shift) + ... + 2^((terms-1) * shift)
+	return (pwmd(2, shift * terms) + mod - 1) * pwmd(pwmd(2, shift) + mod - 1, mod - 2) % mod;
+}
+
+vi f(int a, int b)
+{
+	if (!(a % b))
+		return {pwmd(2, a - 1), pwmd(2, b - 1)};
+
+	vi part = f(b, a % b);
+
+	return {(part[0]*sum(b, a / b) % mod * pwmd(2, a % b) + part[1]) % mod, part[0]};
+
+}
 
 int32_t main()
 {
 	FIO;
-	int n; cin >> n;
-
-	for (int i = 1; i <= n; ++i)
+	w(t)
 	{
-		cin >> arr[i];
-		dp[i][0] = 0;
-	}
+		int a, b; cin >> a >> b;
 
-	// Pre-Process
-	for (int i = 1; i <= n; ++i)
-		for (int j = 1; i - (1 << j) >= 0; ++j)
-		{
-			int id = i - (1 << (j - 1));
-
-			// [st,id], [id+1,i], arr[id+1] - arr[id]
-			dp[i][j] = max({dp[id][j - 1], dp[i][j - 1], arr[id + 1] - arr[id]});
-		}
-
-	w(q)
-	{
-		int t, d; cin >> t >> d;
-
-		int r = upper_bound(arr + 1, arr + n + 1, t) - arr - 1;
-		// Last index id s.t. arr[id] <= t
-
-		int l = r, beg = 1, end = r - 1;
-
-		while (beg <= end)
-		{
-			int mid_l = beg + end >> 1;
-
-			int j = log2(r - mid_l + 1);
-
-			if (max(dp[r][j], dp[mid_l + (1 << j) - 1][j]) <= d)
-				l = mid_l, end = mid_l - 1;
-			else
-				beg = mid_l + 1;
-		}
-
-		cout << l << '\n';
+		cout << f(a, b)[0] << '\n';
 	}
 	return 0;
 }

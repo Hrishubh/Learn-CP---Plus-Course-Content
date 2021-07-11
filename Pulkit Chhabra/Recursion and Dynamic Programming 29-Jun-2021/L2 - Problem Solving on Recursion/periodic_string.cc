@@ -1,3 +1,5 @@
+// https://www.codechef.com/INOIPRAC/problems/INOI1502/
+
 #include<bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
@@ -15,7 +17,6 @@ using namespace std;
 #define pqb             priority_queue<int>
 #define pqs             priority_queue<int,vi,greater<int> >
 #define setbits(x)      __builtin_popcountll(x)
-#define mod             1000000007
 #define inf             1e18
 #define ps(x,y)         fixed<<setprecision(y)<<x
 #define mk(arr,n,type)  type *arr=new type[n];
@@ -27,51 +28,52 @@ mt19937                 rng(chrono::steady_clock::now().time_since_epoch().count
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
 
-int dp[100001][20], arr[100001];
+
+int n, mod, ans[150001];
+
+int pwmd(int a, int n = mod - 2)
+{
+	if (!n)
+		return 1;
+	int pt = pwmd(a, n / 2);
+	pt *= pt, pt %= mod;
+	if (n & 1)
+		pt *= a, pt %= mod;
+	return pt;
+}
+
+int f(int n)
+{
+	if (ans[n] != -1)
+		return ans[n];
+
+	if (n == 1)
+		return 2;
+
+	int total = pwmd(2, n), periodic = 0;
+
+	for (int i = 1; i * i <= n; ++i)
+	{
+		if (n % i)
+			continue;
+
+		// get number of non-periodic
+		periodic += f(i);
+
+		if (i * i != n and i != 1)
+			periodic += f(n / i);
+
+		periodic %= mod;
+	}
+
+	return ans[n] = (total - periodic + mod) % mod;
+}
 
 int32_t main()
 {
 	FIO;
-	int n; cin >> n;
-
-	for (int i = 1; i <= n; ++i)
-	{
-		cin >> arr[i];
-		dp[i][0] = 0;
-	}
-
-	// Pre-Process
-	for (int i = 1; i <= n; ++i)
-		for (int j = 1; i - (1 << j) >= 0; ++j)
-		{
-			int id = i - (1 << (j - 1));
-
-			// [st,id], [id+1,i], arr[id+1] - arr[id]
-			dp[i][j] = max({dp[id][j - 1], dp[i][j - 1], arr[id + 1] - arr[id]});
-		}
-
-	w(q)
-	{
-		int t, d; cin >> t >> d;
-
-		int r = upper_bound(arr + 1, arr + n + 1, t) - arr - 1;
-		// Last index id s.t. arr[id] <= t
-
-		int l = r, beg = 1, end = r - 1;
-
-		while (beg <= end)
-		{
-			int mid_l = beg + end >> 1;
-
-			int j = log2(r - mid_l + 1);
-
-			if (max(dp[r][j], dp[mid_l + (1 << j) - 1][j]) <= d)
-				l = mid_l, end = mid_l - 1;
-			else
-				beg = mid_l + 1;
-		}
-
-		cout << l << '\n';
-	}
+	memset(ans, -1, sizeof(ans));
+	cin >> n >> mod;
+	cout << f(n) << '\n';
 	return 0;
 }
