@@ -10,7 +10,7 @@
 <li>Dynamic Programming - Interview Preparation    (Sanket Singh)</li>
 </ol>
 </pre>
-## <ins>Courses Viewed</ins>
+## <ins>Courses To be Reviewed</ins>
 <pre>
 <ol>
 <li>Advanced Data Structure                        (Pulkit Chabbra)</li>
