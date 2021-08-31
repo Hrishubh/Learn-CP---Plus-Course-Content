@@ -40,6 +40,9 @@ int32_t main()
 
 	for (int j = 0; j < n; ++j)
 	{
+		// Here we are finding the pointer to the 1st index of the value of v[j] in the multiset (as it may be present more than once) and then removing
+		// it using the pointer instead of the value as using the value would remove all instances of that number from the multiset, but, using a pointer
+		// ensures that only one occurance of the number is removed from the multiset.
 		rt.erase(rt.find(v[j]));
 
 		auto it_r = rt.upper_bound(v[j]);
