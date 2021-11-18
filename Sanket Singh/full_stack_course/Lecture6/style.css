@@ -1,0 +1,37 @@
+h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+input:valid {
+    border: 1px solid green;
+}
+
+input:invalid {
+    border: 1px solid red;
+}
+
+input:in-range {
+    background-color: lightgreen;
+}
+
+input:out-of-range {
+    background-color: pink;
+}
+
+input:required {
+    padding: 10px;
+}
+
+input[type="checkbox"]:checked + label {
+    color: red;
+}
+
+q::before {
+    content: "sanket";
+    color: blue;
+}
+
+q::after {
+    content: "»";
+    color: red;
+}

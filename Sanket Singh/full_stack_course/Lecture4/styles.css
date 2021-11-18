@@ -1,0 +1,68 @@
+h2 {
+    color: aquamarine;
+}
+
+p {
+    
+    color: black;
+}
+
+p {
+    font-size: 39px;
+}
+
+
+
+.list-item {
+    color: red;
+}
+
+#last-item {
+    color: black;
+}
+
+li {
+    color:blueviolet;
+}
+
+ul li {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+div > p {
+    font-weight: bolder;
+}
+
+#last-item + li {
+    color: brown;
+}
+
+span ~ h1 {
+    color: aquamarine;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    color: rgba(0, 94, 245, 1);
+    background-color: blue;
+}
+
+input[type] {
+    margin: 30px;    
+}
+
+p[lang|="EN"] {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+input[type="checkbox"]:checked + label {
+    color: red;
+}
+
+input[type="submit"]:hover {
+    background-color: red;
+}
+
+a:visited {
+    color: red;
+}

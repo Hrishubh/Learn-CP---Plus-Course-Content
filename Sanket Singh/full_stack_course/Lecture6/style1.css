@@ -1,0 +1,23 @@
+:root {
+    background-color: beige;
+}
+
+h2 {
+    color: red;
+}
+
+b:only-child {
+    color: blue;
+}
+
+li:nth-child(2) {
+    color: red;
+}
+
+li:nth-child(odd) {
+    color: cadetblue;
+}
+
+li:nth-last-child(2) {
+    color: yellowgreen;
+}
