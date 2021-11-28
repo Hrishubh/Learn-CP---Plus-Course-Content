@@ -1,0 +1,11 @@
+div {
+    width: 150px;
+    padding: 2px;
+    border: 10px black dotted;
+}
+
+div > img {
+    width: 85%;
+    padding: 5px;
+    border: 1px black solid;
+}
